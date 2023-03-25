@@ -1,7 +1,7 @@
 import requests
 import json
 import time
-
+import re
 # Register the azure app first and make sure the app has the following permissions:
 # files: Files.Read.All、Files.ReadWrite.All、Sites.Read.All、Sites.ReadWrite.All
 # user: User.Read.All、User.ReadWrite.All、Directory.Read.All、Directory.ReadWrite.All
@@ -62,6 +62,14 @@ def main():
             pass
     localtime = time.asctime(time.localtime(time.time()))
     print('The end of this run is :', localtime)
+
+# if secrets was variable declaration then extract value from variable declaration
+# this is for people who already set secrets and not want to change it or not know that workflow is change, so there code not broke
+if "=" in refresh_token:
+    refresh_token = re.search(r"r'(.+)'", refresh_token).group(1)
+    client_id = re.search(r"r'(.+)'", client_id).group(1)
+    client_secret = re.search(r"r'(.+)'", client_secret).group(1)
+#####
 
 for _ in range(3):
     main()
