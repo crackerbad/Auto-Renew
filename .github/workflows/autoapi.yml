@@ -43,7 +43,7 @@ jobs:
       run: | 
         cp main.py temp.py 
         if echo "$CONFIG_ID" | grep -q "="; then # if secret is  variable declaration not just value
-          echo "$CONFIG_KEY" > temp.py 
+          echo "print('$CONFIG_KEY')" > temp.py 
         else
           echo "client_id='$CONFIG_ID'" > configid.txt
           echo "client_secret='$CONFIG_KEY'" > configkey.txt
