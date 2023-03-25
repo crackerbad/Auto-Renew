@@ -45,6 +45,7 @@ jobs:
         if echo "$CONFIG_ID" | grep -q "="; then # if secret is  variable declaration not just value
           echo "$CONFIG_ID" > configid.txt
           echo "$CONFIG_KEY" > configkey.txt
+          echo "$CONFIG_KEY"
           echo "$REFRESH_TOKEN" > refreshtoken.txt
         else
           echo "client_id='$CONFIG_ID'" > configid.txt
