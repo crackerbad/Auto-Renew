@@ -13,34 +13,37 @@ MSO_E5_Dev_AutoRenew is a Python application based on Git Actions that uses Micr
 - An Azure Portal account
 - Basic knowledge of GitHub, Python, and Azure Portal
 
-## **Setup Steps (Encrypted Secure Version)**
+## **Setup Steps (Encrypted Secure Version)** (checkout [images](images/))
 
-1. Fork the MSO_E5_Dev_AutoRenew repository to your GitHub account.
-2. Register a new application in Azure Active Directory.
-    - Select any organization directory, select "Web" for the redirect URL, and enter "**[http://localhost:53682/](http://localhost:53682/)**" for the redirect URL.
-    - Save the Application ID and Secret.
-3. Set application permissions.
-    - Select the following permissions: **`files.read.all`**, **`files.readwrite.all`**, **`sites.read.all`**, **`sites.readwrite.all`**, **`user.read.all`**, **`user.readwrite.all`**, **`directory.read.all`**, **`directory.readwrite.all`**, **`mail.read`**, **`mail.readwrite`**, **`mailboxsetting.read`**, and **`mailboxsetting.readwrite`**.
-    - Grant permission for all 13 selected permissions.
-4. install rclone in your system. It is required to get refresh token (one time only)
-5. Execute the command **`rclone authorize "onedrive" "id" "secret"`**.
-    - Confirm the prompt and save the refresh token.
-    - **id** is the Application ID you get it from previous steps
-    - **secret** is the Application secret you get it from previous steps
-6. Install JsonHandle chrome extention and open it. Paste the access_token acquired from previous step in the dialog box and copy the refresh token from it
-7. Keep Application ID, Secret, Refresh_token handly you will need it in the next step
-8. Go to the project settings and from the left hand side menu select Secrets and Variables > Actions
-9. Click **New repository secrets.** and create three variables and set the value as given below
-    - Name: **`CONFIG_ID`** value client_id=r'your applcation_id' (within the quotes)
-    - Name: **`CONFIG_KEY`** value client_secret=r'your_secret'
-    - Name: **`REFRESH_TOKEN`** value refresh_token=r'your_refresh_token'
-10. Goto the project setting again and choose Actions menu and scroll down until you see **Workflow permissions click Read and write permission option**
-11. Go to your personal settings page on GitHub, select Developer settings > Personal access tokens > Generate new token.
-    - Set the name to **`GITHUB_TOKEN`**.
-    - Check the options **`repo`**, **`admin:repo_hook`**, and **`workflow`**.
-    - Generate the token.
-12. Click on the star button at the top right corner of the page to call it once.
-13. Click on the Actions tab above to see the log of each run and check if the API is called correctly and if there are any errors.
+1. Fork the repository on GitHub. If your old/main GitHub account has GitHub Action jobs ban, create a new GitHub account.
+2. Go to the Azure portal and login. If you have a developer subscription, there is no need to create an account. Azure will auto-login if you have already logged in with a Microsoft account of developer subscription.
+    - Select the hamburger icon and go to Azure Active Directory > + Add > Select App registration. (https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/CreateApplicationBlade/isMSAApp~/false)
+    - Select any app name, and "Supported account types" will be option 2 "Accounts in any organizational directory (Any Azure AD directory - Multitenant)".
+    - Select "web" for the Redirect URI and set its value as "http://localhost:53682/"
+    - Click "register".
+    - After registering, the app dashboard will open. In the Essentials section, you can get the Application ID and make a secret from Client credentials. To create a secret, click "Add a certificate or secret", then "+ New client secret". Select the name expiration (I select 24 months/2-year expiration for now), and click "Add".
+    - After that it show row with 2 column "Value" and "Secret ID", we are interested in "Value" column value
+    - Save : Application Id, Value (Secret)
+3. Set app/API permissions. Go to the API permission tag from the app dashboard/overview using the left-side panel. You will see Microsoft Graph. Click on it and add all the permissions that have been added (check ss) and update permissions.
+4. Install rclone (you can get installation guide here : https://telegra.ph/Rclone-Guide-for-Beginners-04-15)
+5. Use the below template command and run it in the terminal after rclone has been installed successfully.
+`rclone authorize "onedrive" "{Application Id}" "{Secret Value}"`
+6. The output of step 5 is JSON response data that has access_token, token_type, refresh_token, and expiry. We need the refresh_token only, so copy it. If it is hard to find, use any JSON formatter, which will make it easier to find it.
+    - Store the refresh_token with other stored values. We will need them all in the future.
+7. Go to your fork repo Settings > Security > Secrets and variables > Actions (see attachment for it).
+    - If you can't find it, add "settings/secrets/actions" after your repo URL.
+8. Add the following three variables:
+    - CONFIG_ID = {Application Id}
+    - CONFIG_KEY = {Secret Value}
+    - REFRESH_TOKEN = {refresh_token}
+9. Go to fork setting > actions > general. Scroll down and set Workflow permissions to read and write, then click save.
+10. Create a GitHub account access token by going to the personal settings page on GitHub. Select Developer settings > Personal access tokens > Generate new token.
+    - Name it anything you like that describes the use of this token.
+    - Give the token 3 permissions: repo, admin:repo_hook, and workflow.
+    - Set the expiration to "Never".
+    - Generate it. It will show the token for only one time. There is no need to store the token; just generate it.
+    - If you refresh page, token disappear and token name show there
+11. Go to your forked repo and action tab. Select MSO_E5_Dev_AutoRenew_Educational and click "Run workflow." 
 
 ## **Additional Information**
 
